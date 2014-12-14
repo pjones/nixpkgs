@@ -2472,6 +2472,8 @@ let
 
   silver-searcher = callPackage ../tools/text/silver-searcher { };
 
+  simple-scan = callPackage ../applications/graphics/sane/simple-scan.nix { };
+
   simplescreenrecorder = callPackage ../applications/video/simplescreenrecorder { };
 
   sleuthkit = callPackage ../tools/system/sleuthkit {};
