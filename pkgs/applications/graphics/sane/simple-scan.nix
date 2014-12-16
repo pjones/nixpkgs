@@ -1,22 +1,13 @@
 { stdenv, fetchurl, saneBackends, glib, gtk3
 , sqlite, zlib, cairo, gdk_pixbuf, pkgconfig
 , colord, vala, udev, itstool, libxml2, intltool
+, gsettings_desktop_schemas, makeWrapper
 }:
 
 stdenv.mkDerivation rec {
   version-series = "3.15";
   version = "${version-series}.2";
   name = "simple-scan-${version}";
-
-  src = fetchurl {
-    url = "http://launchpad.net/simple-scan/${version-series}/${version}/+download/${name}.tar.xz";
-    sha256 = "fd0be534b86129717a74592e7c6c685bf28cb2ea207f5ab7bb4600e41193fa58";
-  };
-
-  buildInputs = [
-    saneBackends glib gtk3 sqlite zlib cairo gdk_pixbuf pkgconfig
-    colord vala udev itstool libxml2 intltool
-   ];
 
   meta = {
     homepage = https://launchpad.net/simple-scan/;
@@ -34,4 +25,20 @@ stdenv.mkDerivation rec {
     maintainers = with stdenv.lib.maintainers; [];
     platforms = with stdenv.lib.platforms; linux;
   };
+
+  src = fetchurl {
+    url = "http://launchpad.net/simple-scan/${version-series}/${version}/+download/${name}.tar.xz";
+    sha256 = "fd0be534b86129717a74592e7c6c685bf28cb2ea207f5ab7bb4600e41193fa58";
+  };
+
+  preFixup = ''
+    wrapProgram $out/bin/simple-scan \
+      --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH:$out/share"
+  '';
+
+  buildInputs = [
+    saneBackends glib gtk3 sqlite zlib cairo gdk_pixbuf pkgconfig
+    colord vala udev itstool libxml2 intltool gsettings_desktop_schemas
+    makeWrapper
+  ];
 }
