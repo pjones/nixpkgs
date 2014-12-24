@@ -1,7 +1,7 @@
 { stdenv, fetchurl, saneBackends, glib, gtk3
 , sqlite, zlib, cairo, gdk_pixbuf, pkgconfig
 , colord, vala, udev, itstool, libxml2, intltool
-, gsettings_desktop_schemas, makeWrapper
+, gsettings_desktop_schemas, gnome3, makeWrapper
 }:
 
 stdenv.mkDerivation rec {
@@ -33,12 +33,12 @@ stdenv.mkDerivation rec {
 
   preFixup = ''
     wrapProgram $out/bin/simple-scan \
-      --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH:$out/share"
+      --prefix XDG_DATA_DIRS : "$XDG_ICON_DIRS:$GSETTINGS_SCHEMAS_PATH:$out/share"
   '';
 
   buildInputs = [
     saneBackends glib gtk3 sqlite zlib cairo gdk_pixbuf pkgconfig
     colord vala udev itstool libxml2 intltool gsettings_desktop_schemas
-    makeWrapper
+    gnome3.gnome_icon_theme_symbolic makeWrapper
   ];
 }
