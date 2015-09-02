@@ -14622,6 +14622,8 @@ let
 
   qucs = callPackage ../applications/science/electronics/qucs { };
 
+  xctu = callPackage ../applications/science/electronics/xctu { };
+
   xoscope = callPackage ../applications/science/electronics/xoscope { };
 
 
