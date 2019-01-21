@@ -10,9 +10,14 @@ let
     ln -s /run/wrappers/bin/apps.plugin $out/libexec/netdata/plugins.d/apps.plugin
   '';
 
+  plugins = [
+    "${pkgs.netdata}/libexec/netdata/plugins.d"
+    "${wrappedPlugins}/libexec/netdata/plugins.d"
+  ] ++ cfg.extraPluginPaths;
+
   localConfig = {
     global = {
-      "plugins directory" = "${pkgs.netdata}/libexec/netdata/plugins.d ${wrappedPlugins}/libexec/netdata/plugins.d";
+      "plugins directory" = concatStringsSep " " plugins;
     };
     web = {
       "web files owner" = "root";
@@ -76,6 +81,21 @@ in {
             to enable additional python plugins.
           '';
         };
+      };
+
+      extraPluginPaths = mkOption {
+        type = types.listOf types.path;
+        default = [ ];
+        example = literalExample ''
+          [ "/path/to/plugins.d" ]
+        '';
+        description = ''
+          Extra paths to add to the netdata global "plugins directory"
+          option.  Useful for when you want to include your own
+          collection scripts.
+
+          Cannot be combined with configText.
+        '';
       };
 
       config = mkOption {
